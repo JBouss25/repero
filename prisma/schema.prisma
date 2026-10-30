@@ -1,0 +1,234 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ========== Banque d'items ==========
+
+model Item {
+  id           String      @id @default(uuid())
+  tenantId     String      @map("tenant_id")
+  competenceId String      @map("competence_id")
+  chapter      String
+  level        String
+  bloom        BloomLevel
+  difficulty   Int
+  curriculum   Curriculum
+  targetTimeS  Int         @map("target_time_s")
+  format       ItemFormat
+  phases       Phase[]
+  label        String
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  distractors  Distractor[]
+  validations  Validation[]
+  responses    Response[]
+  reviewStates ReviewState[]
+
+  @@index([tenantId, competenceId])
+  @@index([tenantId, chapter, level])
+  @@map("items")
+}
+
+model Distractor {
+  id        String @id @default(uuid())
+  itemId    String @map("item_id")
+  label     String
+  errorType String @map("error_type")
+  item      Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("distractors")
+}
+
+model Validation {
+  id         String         @id @default(uuid())
+  itemId     String         @map("item_id")
+  step       ValidationStep
+  reviewerId String?        @map("reviewer_id")
+  passedAt   DateTime?      @map("passed_at")
+  item       Item           @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@map("validations")
+}
+
+// ========== État apprenant ==========
+
+model ReviewState {
+  id            String   @id @default(uuid())
+  tenantId      String   @map("tenant_id")
+  studentId     String   @map("student_id")
+  itemId        String   @map("item_id")
+  lastReviewAt  DateTime @map("last_review_at")
+  dueAt         DateTime @map("due_at")
+  stabilityDays Float    @map("stability_days")
+  reps          Int      @default(0)
+  lapses        Int      @default(0)
+  item          Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, studentId, itemId])
+  @@index([tenantId, studentId, dueAt])
+  @@map("review_states")
+}
+
+model Mastery {
+  id            String   @id @default(uuid())
+  tenantId      String   @map("tenant_id")
+  studentId     String   @map("student_id")
+  competenceId  String   @map("competence_id")
+  pMastery      Float    @map("p_mastery")
+  slip          Float    @default(0.1)
+  guess         Float    @default(0.25)
+  transit       Float    @default(0.2)
+  mastered      Boolean  @default(false)
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, studentId, competenceId])
+  @@index([tenantId, studentId, mastered])
+  @@map("mastery")
+}
+
+model Response {
+  id           String     @id @default(uuid())
+  tenantId     String     @map("tenant_id")
+  studentId    String     @map("student_id")
+  itemId       String     @map("item_id")
+  correct      Boolean
+  timeMs       Int        @map("time_ms")
+  targetTimeMs Int        @map("target_time_ms")
+  hintsUsed    Int        @map("hints_used")
+  confidence   Confidence
+  at           DateTime   @default(now())
+  item         Item       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, studentId, at])
+  @@index([tenantId, itemId])
+  @@map("responses")
+}
+
+// ========== Sessions et décisions ==========
+
+model SessionLog {
+  id         String        @id @default(uuid())
+  tenantId   String        @map("tenant_id")
+  studentId  String        @map("student_id")
+  composedAt DateTime      @map("composed_at")
+  itemIds    String[]      @map("item_ids")
+  decisions  DecisionLog[]
+  @@index([tenantId, studentId, composedAt])
+  @@map("session_logs")
+}
+
+model DecisionLog {
+  id         String   @id @default(uuid())
+  sessionId  String   @map("session_id")
+  itemId     String   @map("item_id")
+  rule       String
+  reason     String
+  at         DateTime
+  session    SessionLog @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("decision_logs")
+}
+
+// ========== Calendrier ==========
+
+model ExamDate {
+  id         String   @id @default(uuid())
+  tenantId   String   @map("tenant_id")
+  studentId  String   @map("student_id")
+  chapter    String
+  at         DateTime
+  createdBy  String   @map("created_by")
+  @@index([tenantId, studentId, at])
+  @@map("exam_dates")
+}
+
+// ========== Enums ==========
+
+enum BloomLevel {
+  remember
+  understand
+  apply
+  analyze
+  evaluate
+  @@map("bloom_level")
+}
+
+enum Curriculum {
+  marocain
+  francais
+  commun
+  @@map("curriculum")
+}
+
+enum ItemFormat {
+  qcm
+  numeric
+  true_false
+  guided
+  graph
+  @@map("item_format")
+}
+
+enum Phase {
+  warmup
+  core
+  self_eval
+  challenge
+  @@map("phase")
+}
+
+enum ValidationStep {
+  redaction
+  peer_review
+  test_30
+  @@map("validation_step")
+}
+
+enum Confidence {
+  sure
+  hesitant
+  random
+  @@map("confidence")
+}
+model Streak {
+  id        String    @id @default(uuid())
+  tenantId  String    @map("tenant_id")
+  studentId String    @map("student_id")
+  current   Int       @default(0)
+  longest   Int       @default(0)
+  lastActiveAt DateTime? @map("last_active_at")
+  jokerUsedAt  DateTime? @map("joker_used_at")
+
+  @@unique([tenantId, studentId])
+  @@map("streaks")
+}
+
+model DailyNotification {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  studentId String   @map("student_id")
+  sentAt    DateTime @default(now()) @map("sent_at")
+  type      String
+
+  @@index([tenantId, studentId, sentAt])
+  @@map("daily_notifications")
+}
+
+model TutorAlert {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  studentId String   @map("student_id")
+  type      String
+  priority  String
+  detail    String
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, priority, resolved])
+  @@map("tutor_alerts")
+}
