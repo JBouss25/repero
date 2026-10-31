@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import { readSession } from '@/lib/oidc/session';
 import { processAnswer } from '@/lib/services/answer-service';
