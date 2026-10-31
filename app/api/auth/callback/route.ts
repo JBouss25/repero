@@ -1,15 +1,17 @@
-import * as client from 'openid-client';
 import { NextResponse } from 'next/server';
-import { getOidcConfig } from '@/lib/oidc/config';
-import { readPending, clearPending } from '@/lib/oidc/pkce-store';
-import { extractSessionUser, OidcClaimError } from '@/lib/oidc/claims';
-import { createSession } from '@/lib/oidc/session';
-import { env } from '@/lib/env';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<Response> {
+  // Imports dynamiques : évitent l'évaluation des modules au build
+  const client = await import('openid-client');
+  const { getOidcConfig } = await import('@/lib/oidc/config');
+  const { readPending, clearPending } = await import('@/lib/oidc/pkce-store');
+  const { extractSessionUser, OidcClaimError } = await import('@/lib/oidc/claims');
+  const { createSession } = await import('@/lib/oidc/session');
+  const { env } = await import('@/lib/env');
+
   const pending = await readPending();
   if (!pending) {
     return NextResponse.json({ error: 'OIDC_STATE_EXPIRED' }, { status: 400 });
@@ -18,7 +20,7 @@ export async function GET(request: Request): Promise<Response> {
   const cfg = await getOidcConfig();
   const currentUrl = new URL(request.url);
 
-  let tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers;
+  let tokens: any;
   try {
     tokens = await client.authorizationCodeGrant(cfg, currentUrl, {
       pkceCodeVerifier: pending.codeVerifier,

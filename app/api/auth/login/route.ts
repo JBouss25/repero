@@ -1,15 +1,15 @@
-import * as client from 'openid-client';
 import { NextResponse } from 'next/server';
-import { getOidcConfig } from '@/lib/oidc/config';
-import { savePending } from '@/lib/oidc/pkce-store';
-import { env } from '@/lib/env';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request): Promise<Response> {
-  const cfg = await getOidcConfig();
+  const client = await import('openid-client');
+  const { getOidcConfig } = await import('@/lib/oidc/config');
+  const { savePending } = await import('@/lib/oidc/pkce-store');
+  const { env } = await import('@/lib/env');
 
+  const cfg = await getOidcConfig();
   const codeVerifier = client.randomPKCECodeVerifier();
   const codeChallenge = await client.calculatePKCECodeChallenge(codeVerifier);
   const state = client.randomState();
