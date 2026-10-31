@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { readSession } from '@/lib/oidc/session';
+
+export const dynamic = 'force-dynamic';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const { readSession } = await import('@/lib/oidc/session');
   const session = await readSession();
   if (!session) redirect('/login');
 
