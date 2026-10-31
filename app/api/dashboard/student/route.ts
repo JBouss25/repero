@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { readSession } from '@/lib/oidc/session';
-import { prisma } from '@/lib/db/client';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(): Promise<Response> {
+  const { readSession } = await import('@/lib/oidc/session');
+  const { prisma } = await import('@/lib/db/client');
+
   const session = await readSession();
   if (!session) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
 

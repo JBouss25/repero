@@ -1,12 +1,13 @@
-
 import { NextResponse } from 'next/server';
-import { readSession } from '@/lib/oidc/session';
-import { processAnswer } from '@/lib/services/answer-service';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: Request): Promise<Response> {
+  // Import dynamique : évite l'évaluation du module au build
+  const { readSession } = await import('@/lib/oidc/session');
+  const { processAnswer } = await import('@/lib/services/answer-service');
+
   const session = await readSession();
   if (!session) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
 
