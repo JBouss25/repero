@@ -1,8 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { cn } from "cn"
-import { Dialog as DialogPrimitive } from "radix-ui"
+import { cn } from "@/lib/utils"
+import * as DialogPrimitive from "@radix-ui/react-dialog"
 
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
@@ -72,7 +72,7 @@ function DialogContent({
             <Button
               variant="ghost"
               className="absolute top-4 right-4"
-              size="icon-sm"
+              size="icon"
             >
               <XIcon
               />
