@@ -4,8 +4,10 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   reactStrictMode: true,
   poweredByHeader: false,
-  // CORRECTION : sortir de experimental et renommer
   serverExternalPackages: ['openid-client'],
+  experimental: {
+    serverMinification: false,
+  },
 };
 
 export default nextConfig;
