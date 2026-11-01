@@ -3,13 +3,19 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
-// Utilise l'URL poolée (port 6543) pour le runtime
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
+function getOrCreatePrisma(): PrismaClient {
+  if (!globalForPrisma.prisma) {
+    const adapter = new PrismaPg({
+      connectionString: process.env.DATABASE_URL,
+    });
+    globalForPrisma.prisma = new PrismaClient({ adapter });
+  }
+  return globalForPrisma.prisma;
+}
+
+// Proxy : retarde la création du client jusqu'au premier vrai appel DB
+export const prisma = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    return getOrCreatePrisma()[prop as keyof PrismaClient];
+  },
 });
-
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({ adapter });
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
