@@ -147,6 +147,46 @@ model ExamDate {
   @@map("exam_dates")
 }
 
+// ========== Bloc E : Streak, Alertes, Notifications ==========
+
+model Streak {
+  id          String    @id @default(uuid())
+  tenantId    String    @map("tenant_id")
+  studentId   String    @map("student_id")
+  current     Int       @default(0)
+  longest     Int       @default(0)
+  lastActiveAt DateTime? @map("last_active_at")
+  jokerUsedAt  DateTime? @map("joker_used_at")
+
+  @@unique([tenantId, studentId])
+  @@map("streaks")
+}
+
+model DailyNotification {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  studentId String   @map("student_id")
+  sentAt    DateTime @default(now()) @map("sent_at")
+  type      String
+
+  @@index([tenantId, studentId, sentAt])
+  @@map("daily_notifications")
+}
+
+model TutorAlert {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  studentId String   @map("student_id")
+  type      String
+  priority  String
+  detail    String
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, priority, resolved])
+  @@map("tutor_alerts")
+}
+
 // ========== Enums ==========
 
 enum BloomLevel {
@@ -194,41 +234,4 @@ enum Confidence {
   hesitant
   random
   @@map("confidence")
-}
-model Streak {
-  id        String    @id @default(uuid())
-  tenantId  String    @map("tenant_id")
-  studentId String    @map("student_id")
-  current   Int       @default(0)
-  longest   Int       @default(0)
-  lastActiveAt DateTime? @map("last_active_at")
-  jokerUsedAt  DateTime? @map("joker_used_at")
-
-  @@unique([tenantId, studentId])
-  @@map("streaks")
-}
-
-model DailyNotification {
-  id        String   @id @default(uuid())
-  tenantId  String   @map("tenant_id")
-  studentId String   @map("student_id")
-  sentAt    DateTime @default(now()) @map("sent_at")
-  type      String
-
-  @@index([tenantId, studentId, sentAt])
-  @@map("daily_notifications")
-}
-
-model TutorAlert {
-  id        String   @id @default(uuid())
-  tenantId  String   @map("tenant_id")
-  studentId String   @map("student_id")
-  type      String
-  priority  String
-  detail    String
-  resolved  Boolean  @default(false)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  @@index([tenantId, priority, resolved])
-  @@map("tutor_alerts")
 }
