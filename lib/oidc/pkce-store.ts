@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/lib/env';
 
 const PENDING_COOKIE = 'repero_oidc_pending';
-const PENDING_TTL_SECONDS = 600;
+const PENDING_TTL_SECONDS = 900;
 
 export interface PendingAuth {
   codeVerifier: string;
@@ -24,16 +24,17 @@ export async function savePending(payload: PendingAuth): Promise<void> {
     .setExpirationTime(now + PENDING_TTL_SECONDS)
     .sign(secretKey());
 
+  const isProduction = env.NODE_ENV === 'production';
+
   const jar = await cookies();
   jar.set(PENDING_COOKIE, jwt, {
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax', // ← Changement crucial
     path: '/',
     maxAge: PENDING_TTL_SECONDS,
   });
 }
-
 export async function readPending(): Promise<PendingAuth | null> {
   const jar = await cookies();
   const raw = jar.get(PENDING_COOKIE)?.value;
