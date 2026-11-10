@@ -29,8 +29,8 @@ export async function savePending(payload: PendingAuth): Promise<void> {
   const jar = await cookies();
   jar.set(PENDING_COOKIE, jwt, {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax', // ← Changement crucial
+    secure: true,
+    sameSite: isProduction ? 'none', // ← Changement crucial
     path: '/',
     maxAge: PENDING_TTL_SECONDS,
   });
