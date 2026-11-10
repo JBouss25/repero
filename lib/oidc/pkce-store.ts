@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { env } from '@/lib/env';
 
 const PENDING_COOKIE = 'repero_oidc_pending';
-const PENDING_TTL_SECONDS = 900;
+const PENDING_TTL_SECONDS = 600; // 10 minutes
 
 export interface PendingAuth {
   codeVerifier: string;
@@ -29,12 +29,14 @@ export async function savePending(payload: PendingAuth): Promise<void> {
   const jar = await cookies();
   jar.set(PENDING_COOKIE, jwt, {
     httpOnly: true,
-    secure: true,
-    sameSite: isProduction ? 'none', // ← Changement crucial
+    secure: isProduction,
+    // On utilise 'lax' car repero.oostudy.ma et auth.oostudy.ma sont sur le même domaine racine.
+    sameSite: 'lax', 
     path: '/',
     maxAge: PENDING_TTL_SECONDS,
   });
 }
+
 export async function readPending(): Promise<PendingAuth | null> {
   const jar = await cookies();
   const raw = jar.get(PENDING_COOKIE)?.value;
