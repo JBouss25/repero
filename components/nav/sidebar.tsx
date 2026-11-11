@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Target, Calendar, ShieldAlert, LogOut } from 'lucide-react';
+import { Home, Target, Calendar, ShieldAlert, LogOut, Upload } from 'lucide-react';
 import type { SessionUser } from '@/lib/types';
 
 interface SidebarProps {
@@ -14,6 +14,8 @@ const navigation = [
   { name: 'Session', href: '/session', icon: Target, roles: ['student'] },
   { name: 'Contrôles', href: '/onboarding', icon: Calendar, roles: ['student'] },
   { name: 'Alertes', href: '/tutor', icon: ShieldAlert, roles: ['tutor', 'school_admin'] },
+  // 👇 Nouvelle ligne pour l'administration
+  { name: 'Import Items', href: '/admin/items', icon: Upload, roles: ['school_admin', 'tutor'] },
 ];
 
 export function Sidebar({ user }: SidebarProps) {
@@ -27,26 +29,22 @@ export function Sidebar({ user }: SidebarProps) {
     <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-[#0A192F] text-white z-50">
       <div className="flex flex-col flex-1 min-h-0">
         
-        {/* Logo agrandi (h-14 soit 56px) */}
+        {/* Logo */}
         <div className="flex items-center justify-center h-24 px-4 border-b border-white/10">
-          <Link href="/dashboard" className="flex items-center justify-center">
-  <img 
-    src="/logo-dark.png" 
-    alt="Repero" 
-    style={{ 
-      height: '56px', 
-      width: 'auto', 
-      objectFit: 'contain' 
-    }} 
-  />
-</Link>
+          <Link href="/dashboard" className="flex items-center">
+            <img 
+              src="/logo-dark.png" 
+              alt="Repero" 
+              style={{ height: '56px', width: 'auto', objectFit: 'contain' }} 
+            />
+          </Link>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-6 space-y-2">
           {filteredNav.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            const Icon = item.icon; // On extrait l'icône dans une variable majuscule
+            const Icon = item.icon;
             
             return (
               <Link
