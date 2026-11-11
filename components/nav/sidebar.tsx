@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Home, Target, Calendar, ShieldAlert, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import type { SessionUser } from '@/lib/types';
 
 interface SidebarProps {
@@ -26,42 +24,50 @@ export function Sidebar({ user }: SidebarProps) {
   );
 
   return (
-    <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-[#0A192F] text-white">
+    <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 bg-[#0A192F] text-white z-50">
       <div className="flex flex-col flex-1 min-h-0">
-        <div className="flex items-center justify-center h-20 px-4 border-b border-white/10">
-          <Link href="/dashboard">
-            <Image 
-              src="/logo-dark.png" 
+        
+        {/* Logo agrandi (h-14 soit 56px) */}
+        <div className="flex items-center justify-center h-24 px-4 border-b border-white/10">
+          <Link href="/dashboard" className="flex items-center">
+            <img 
+              src="/logo-dark.jpg" 
               alt="Repero" 
-              width={140} 
-              height={40} 
-              className="w-auto h-10 object-contain"
-              priority
+              style={{ height: '56px', width: 'auto', objectFit: 'contain' }} 
             />
           </Link>
         </div>
 
+        {/* Navigation */}
         <nav className="flex-1 px-3 py-6 space-y-2">
           {filteredNav.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+            const Icon = item.icon; // On extrait l'icône dans une variable majuscule
+            
             return (
-              <Link href="/dashboard" className="flex items-center gap-2">
-  <img 
-    src="/logo-dark.png" 
-    alt="Repero" 
-    className="h-10 w-auto object-contain"
-  />
-</Link>
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  isActive
+                    ? 'bg-[#0066FF] text-white'
+                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <Icon className="mr-3 h-5 w-5" />
+                <span>{item.name}</span>
+              </Link>
             );
           })}
         </nav>
 
+        {/* Déconnexion */}
         <div className="p-4 border-t border-white/10">
           <form method="POST" action="/api/auth/logout">
-            <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-white/10">
+            <button type="submit" className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-300 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
               <LogOut className="mr-3 h-5 w-5" />
               Déconnexion
-            </Button>
+            </button>
           </form>
         </div>
       </div>

@@ -28,6 +28,8 @@ export function MobileNav({ user }: MobileNavProps) {
       <div className="flex justify-around items-center h-16">
         {filteredNav.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          const Icon = item.icon;
+          
           return (
             <Link
               key={item.name}
@@ -36,7 +38,7 @@ export function MobileNav({ user }: MobileNavProps) {
                 isActive ? 'text-[#0066FF]' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
-              <item.icon className={`h-6 w-6 ${isActive ? 'text-[#0066FF]' : 'text-gray-500'}`} />
+              <Icon className={`h-6 w-6 ${isActive ? 'text-[#0066FF]' : 'text-gray-500'}`} />
               <span className="text-[10px] font-medium">{item.name}</span>
             </Link>
           );
