@@ -30,10 +30,10 @@ export async function savePending(payload: PendingAuth): Promise<void> {
   jar.set(PENDING_COOKIE, jwt, {
     httpOnly: true,
     secure: isProduction,
-    // On utilise 'lax' car repero.oostudy.ma et auth.oostudy.ma sont sur le même domaine racine.
-    sameSite: 'lax', 
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
     maxAge: PENDING_TTL_SECONDS,
+    domain: isProduction ? '.oostudy.ma' : undefined,
   });
 }
 
