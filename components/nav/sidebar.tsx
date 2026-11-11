@@ -45,18 +45,13 @@ export function Sidebar({ user }: SidebarProps) {
           {filteredNav.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
-                  isActive
-                    ? 'bg-[#0066FF] text-white'
-                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </Link>
+              <Link href="/dashboard" className="flex items-center gap-2">
+  <img 
+    src="/logo-dark.png" 
+    alt="Repero" 
+    className="h-10 w-auto object-contain"
+  />
+</Link>
             );
           })}
         </nav>
