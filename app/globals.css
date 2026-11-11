@@ -127,3 +127,12 @@
     @apply font-sans;
   }
 }
+@layer base {
+  :root {
+    --repero-dark: 10 25 47;          /* #0A192F */
+    --repero-primary: 0 102 255;      /* #0066FF */
+    --repero-cyan: 0 210 255;         /* #00D2FF */
+    --repero-orange: 245 158 11;      /* #F59E0B */
+    --repero-gray: 243 244 246;       /* #F3F4F6 */
+  }
+}

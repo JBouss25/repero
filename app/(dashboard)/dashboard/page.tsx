@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-
+export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
   const session = await readSession();
   if (!session) return null;

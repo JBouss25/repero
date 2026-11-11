@@ -16,7 +16,7 @@ export interface SessionTokens {
 
 export interface Session {
   user: SessionUser;
-  tokens: SessionTokens;
+  tokens?: SessionTokens; // Rendu optionnel pour alléger le cookie
   createdAt: number;
   expiresAt: number;
 }

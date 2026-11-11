@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
+import { Sidebar } from '@/components/nav/sidebar';
+import { MobileNav } from '@/components/nav/mobile-nav';
+import { Header } from '@/components/nav/header';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,21 +12,17 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   if (!session) redirect('/login');
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <aside style={{ width: 220, borderRight: '1px solid #e5e7eb', padding: 16 }}>
-        <h2 style={{ marginTop: 0 }}>Repero</h2>
-        <p style={{ fontSize: 12, color: '#666' }}>{session.user.email}</p>
-        <p style={{ fontSize: 11, color: '#999' }}>tenant : {session.user.tenantId}</p>
-        <form method="POST" action="/api/auth/logout" style={{ marginTop: 24 }}>
-          <button
-            type="submit"
-            style={{ width: '100%', padding: '8px 12px', borderRadius: 6, cursor: 'pointer' }}
-          >
-            Se deconnecter
-          </button>
-        </form>
-      </aside>
-      <section style={{ flex: 1, padding: 24 }}>{children}</section>
+    <div className="min-h-screen bg-gray-50">
+      <Sidebar user={session.user} />
+      <Header user={session.user} />
+      
+      <main className="md:pl-64 pb-16 md:pb-0">
+        <div className="p-4 md:p-6 lg:p-8">
+          {children}
+        </div>
+      </main>
+      
+      <MobileNav user={session.user} />
     </div>
   );
 }
