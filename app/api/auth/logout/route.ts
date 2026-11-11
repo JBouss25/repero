@@ -1,33 +1,31 @@
+import * as client from 'openid-client';
 import { NextResponse } from 'next/server';
+import { getOidcConfig } from '@/lib/oidc/config';
+import { readSession, destroySession } from '@/lib/oidc/session';
+import { env } from '@/lib/env';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request): Promise<Response> {
-  const client = await import('openid-client');
-  const { getOidcConfig } = await import('@/lib/oidc/config');
-  const { savePending } = await import('@/lib/oidc/pkce-store');
-  const { env } = await import('@/lib/env');
+export async function POST(): Promise<Response> {
+  const session = await readSession();
+  await destroySession();
+
+  // Redirection locale : utilise 303 pour forcer un GET
+  if (!session?.tokens?.idToken) {
+    return NextResponse.redirect(new URL('/', env.REPERO_BASE_URL).href, 303);
+  }
 
   const cfg = await getOidcConfig();
-  const codeVerifier = client.randomPKCECodeVerifier();
-  const codeChallenge = await client.calculatePKCECodeChallenge(codeVerifier);
-  const state = client.randomState();
-  const nonce = client.randomNonce();
+  const endSession = cfg.serverMetadata().end_session_endpoint;
+  if (!endSession) {
+    return NextResponse.redirect(new URL('/', env.REPERO_BASE_URL).href, 303);
+  }
 
-  const url = new URL(request.url);
-  const returnTo = url.searchParams.get('returnTo') ?? '/dashboard';
+  // Redirection vers Keycloak : 303 aussi pour être sûr
+  const url = new URL(endSession);
+  url.searchParams.set('id_token_hint', session.tokens.idToken);
+  url.searchParams.set('post_logout_redirect_uri', env.REPERO_POST_LOGOUT_URI);
 
-  await savePending({ codeVerifier, state, nonce, returnTo });
-
-  const authUrl = client.buildAuthorizationUrl(cfg, {
-    redirect_uri: env.REPERO_OIDC_REDIRECT_URI,
-    scope: 'openid profile email',
-    code_challenge: codeChallenge,
-    code_challenge_method: 'S256',
-    state,
-    nonce,
-  });
-
-  return NextResponse.redirect(authUrl.href);
+  return NextResponse.redirect(url.href, 303);
 }
