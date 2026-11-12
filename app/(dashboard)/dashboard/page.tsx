@@ -2,13 +2,16 @@ import { readSession } from '@/lib/oidc/session';
 import { prisma } from '@/lib/db/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { StreakBadge } from '@/components/dashboard/StreakBadge';
 import Link from 'next/link';
+
 export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   const session = await readSession();
   if (!session) return null;
 
-  const [mastery, dueCount] = await Promise.all([
+  const [mastery, dueCount, streak] = await Promise.all([
     prisma.mastery.findMany({
       where: { tenantId: session.user.tenantId, studentId: session.user.sub },
       orderBy: { pMastery: 'asc' },
@@ -21,46 +24,72 @@ export default async function DashboardPage() {
         dueAt: { lte: new Date() },
       },
     }),
+    prisma.streak.findUnique({
+      where: {
+        tenantId_studentId: {
+          tenantId: session.user.tenantId,
+          studentId: session.user.sub,
+        },
+      },
+    }),
   ]);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">Bonjour</h1>
-        <p className="text-muted-foreground">Prêt pour 15 minutes ?</p>
+    <div className="p-6 md:p-8 max-w-5xl mx-auto space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Bonjour</h1>
+          <p className="text-gray-500 mt-1">Prêt pour vos 15 minutes quotidiennes ?</p>
+        </div>
+        
+        {streak && <StreakBadge current={streak.current} longest={streak.longest} />}
       </div>
 
-      <div className="p-6 bg-blue-50 border border-blue-200 rounded-xl flex justify-between items-center">
+      <div className="p-6 bg-[#0066FF] rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg shadow-blue-500/20">
         <div>
-          <h2 className="text-lg font-bold text-blue-900">Session du jour</h2>
-          <p className="text-blue-700 text-sm">
-            {dueCount > 0 ? `${dueCount} révision(s) due(s)` : 'Consolidez vos compétences.'}
+          <h2 className="text-xl font-bold text-white">Session du jour</h2>
+          <p className="text-blue-100 mt-1">
+            {dueCount > 0 
+              ? `${dueCount} révision(s) en attente pour consolider vos acquis.`
+              : 'Consolidez vos compétences en 15 minutes.'}
           </p>
         </div>
         <Link
           href="/session"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold"
+          className="bg-white text-[#0066FF] hover:bg-gray-50 px-8 py-3 rounded-xl font-bold transition-transform hover:scale-105"
         >
           Démarrer
         </Link>
       </div>
 
       <div>
-        <h3 className="text-lg font-bold mb-4">Jauges de maîtrise</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-4">Jauges de maîtrise</h3>
         {mastery.length === 0 ? (
-          <p className="text-muted-foreground">Pas encore de données de maîtrise.</p>
+          <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-8 text-center">
+            <p className="text-gray-500">Pas encore de données de maîtrise.</p>
+            <p className="text-sm text-gray-400 mt-1">Faites une session pour voir vos progrès.</p>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {mastery.map((m) => (
-              <Card key={m.competenceId}>
-                <CardHeader>
-                  <CardTitle className="text-sm">{m.competenceId}</CardTitle>
+              <Card key={m.competenceId} className="shadow-sm">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium text-gray-500">
+                    {m.competenceId}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Progress value={m.pMastery * 100} />
-                  <p className="text-xs text-right mt-2 text-muted-foreground">
-                    {Math.round(m.pMastery * 100)}% {m.mastered && '✅'}
-                  </p>
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="text-2xl font-bold text-gray-900">
+                      {Math.round(m.pMastery * 100)}%
+                    </span>
+                    {m.mastered && (
+                      <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                        Acquis
+                      </span>
+                    )}
+                  </div>
+                  <Progress value={m.pMastery * 100} className="h-2" />
                 </CardContent>
               </Card>
             ))}
@@ -68,9 +97,9 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      <div className="text-sm text-muted-foreground border-t pt-4">
-        <p><strong>sub</strong> : {session.user.sub}</p>
-        <p><strong>tenant</strong> : {session.user.tenantId}</p>
+      <div className="text-xs text-gray-400 border-t pt-4 flex justify-between">
+        <span>Utilisateur : {session.user.sub.substring(0, 8)}...</span>
+        <span>Tenant : {session.user.tenantId.substring(0, 8)}...</span>
       </div>
     </div>
   );
