@@ -102,11 +102,6 @@ export default async function DashboardPage() {
         <span>Tenant : {session.user.tenantId.substring(0, 8)}...</span>
       </div>
     </div>
-	<div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm font-mono">
-  <p className="font-bold text-yellow-800 mb-2">🛠️ DEBUG RÔLES :</p>
-  <pre className="whitespace-pre-wrap text-yellow-900">
-    {JSON.stringify(session.user, null, 2)}
-  </pre>
-</div>
+	
   );
 }
