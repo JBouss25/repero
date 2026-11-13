@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import { ArrowRight, Brain, Clock, TrendingUp, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { WaitlistForm } from '@/components/WaitlistForm';
 
+// ... dans la Hero Section :
+<WaitlistForm />
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans selection:bg-blue-200">

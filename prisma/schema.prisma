@@ -235,3 +235,10 @@ enum Confidence {
   random
   @@map("confidence")
 }
+model Waitlist {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  source    String   @default("landing")
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("waitlist")
+}
