@@ -14,14 +14,10 @@ export function Header({ user }: HeaderProps) {
     <header className="md:hidden flex items-center justify-between h-16 px-4 bg-[#0A192F] text-white z-50">
      <Link href="/dashboard" className="flex items-center">
   <img 
-    src="/logo-dark.png" 
-    alt="Repero" 
-    style={{ 
-      height: '36px', 
-      width: 'auto', 
-      objectFit: 'contain' 
-    }} 
-  />
+  src="/logo-dark.png" 
+  alt="Repero" 
+  style={{ width: '140px', height: 'auto', objectFit: 'contain' }} 
+/>
 </Link>
       <form method="POST" action="/api/auth/logout">
         <button type="submit" className="p-2 text-white hover:bg-white/10 rounded-full">

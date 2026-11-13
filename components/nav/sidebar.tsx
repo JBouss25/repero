@@ -40,11 +40,11 @@ export function Sidebar({ user }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center justify-center h-24 px-4 border-b border-white/10">
           <Link href="/dashboard" className="flex items-center">
-            <img 
-              src="/logo-dark.png" 
-              alt="Repero" 
-              style={{ height: '56px', width: 'auto', objectFit: 'contain' }} 
-            />
+<img 
+  src="/logo-dark.png" 
+  alt="Repero" 
+  style={{ width: '180px', height: 'auto', objectFit: 'contain' }} 
+/>
           </Link>
         </div>
 
