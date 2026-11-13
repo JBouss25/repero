@@ -10,7 +10,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {/* Logo agrandi : h-14 au lieu de h-10 */}
-            <img src="/logo-light.png" alt="Repero" className="h-14 w-auto object-contain" />
+            <img src="/logo-light.png" alt="Repero" className="w-48 h-auto object-contain" />
           </div>
           <Link 
             href="/api/auth/login" 
