@@ -5,11 +5,9 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans selection:bg-blue-200">
       
-      {/* NAVBAR */}
       <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Logo agrandi : h-14 au lieu de h-10 */}
             <img src="/logo-light.png" alt="Repero" className="w-48 h-auto object-contain" />
           </div>
           <Link 
@@ -22,11 +20,9 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* HERO */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6">
                 <Brain className="h-4 w-4" />
@@ -59,25 +55,23 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Image (temporaire : logo-dark pour ne pas avoir le texte cassé) */}
+            {/* IMAGE HERO */}
             <div className="relative">
               <div className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-blue-500/20 blur-3xl"></div>
               <div className="absolute -bottom-10 -left-10 w-72 h-72 rounded-full bg-cyan-500/20 blur-3xl"></div>
               
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200 bg-[#0A192F] p-8">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200">
                 <img 
-                  src="/logo-dark.png" 
-                  alt="Repero" 
-                  className="w-full h-auto object-contain"
+                  src="/hero-image.png" 
+                  alt="Application Repero" 
+                  className="w-full h-auto object-cover"
                 />
               </div>
             </div>
-
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -113,7 +107,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA FINAL */}
       <section className="py-24 bg-[#0A192F] relative overflow-hidden">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl"></div>
@@ -141,7 +134,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="bg-white py-12 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
