@@ -5,11 +5,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans selection:bg-blue-200">
       
-      {/* ================= NAVBAR ================= */}
+      {/* NAVBAR */}
       <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo-light.png" alt="Repero" className="h-10 w-auto object-contain" />
+            {/* Logo agrandi : h-14 au lieu de h-10 */}
+            <img src="/logo-light.png" alt="Repero" className="h-14 w-auto object-contain" />
           </div>
           <Link 
             href="/api/auth/login" 
@@ -21,12 +22,11 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* ================= HERO SECTION ================= */}
+      {/* HERO */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             
-            {/* Colonne gauche : Texte */}
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6">
                 <Brain className="h-4 w-4" />
@@ -59,18 +59,16 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Colonne droite : Image HD */}
+            {/* Image (temporaire : logo-dark pour ne pas avoir le texte cassé) */}
             <div className="relative">
-              {/* Halos décoratifs */}
               <div className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-blue-500/20 blur-3xl"></div>
               <div className="absolute -bottom-10 -left-10 w-72 h-72 rounded-full bg-cyan-500/20 blur-3xl"></div>
               
-              {/* Image */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-gray-200 bg-[#0A192F] p-8">
                 <img 
-                  src="/hero-image.png" 
-                  alt="Application Repero sur mobile" 
-                  className="w-full h-auto object-cover"
+                  src="/logo-dark.png" 
+                  alt="Repero" 
+                  className="w-full h-auto object-contain"
                 />
               </div>
             </div>
@@ -79,7 +77,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
+      {/* FEATURES */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -88,7 +86,6 @@ export default function LandingPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {/* Card 1 */}
             <div className="p-8 bg-[#F8FAFC] rounded-3xl border border-gray-100 hover:border-blue-200 transition-colors hover:shadow-lg">
               <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
                 <Clock className="h-7 w-7" />
@@ -97,7 +94,6 @@ export default function LandingPage() {
               <p className="text-gray-600 leading-relaxed">Notre algorithme planifie vos révisions juste avant que votre cerveau n'oublie. Vous révisez au meilleur moment, pas trop tôt, pas trop tard.</p>
             </div>
 
-            {/* Card 2 */}
             <div className="p-8 bg-[#F8FAFC] rounded-3xl border border-gray-100 hover:border-blue-200 transition-colors hover:shadow-lg">
               <div className="w-14 h-14 bg-cyan-100 rounded-2xl flex items-center justify-center text-cyan-600 mb-6">
                 <Brain className="h-7 w-7" />
@@ -106,7 +102,6 @@ export default function LandingPage() {
               <p className="text-gray-600 leading-relaxed">Notre IA détecte vos compétences les plus fragiles et vous propose des exercices ciblés. Vous ne perdez plus de temps sur ce que vous maîtrisez déjà.</p>
             </div>
 
-            {/* Card 3 */}
             <div className="p-8 bg-[#F8FAFC] rounded-3xl border border-gray-100 hover:border-blue-200 transition-colors hover:shadow-lg">
               <div className="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
                 <TrendingUp className="h-7 w-7" />
@@ -118,7 +113,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= CTA FINAL ================= */}
+      {/* CTA FINAL */}
       <section className="py-24 bg-[#0A192F] relative overflow-hidden">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-cyan-500/10 blur-3xl"></div>
@@ -146,11 +141,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ================= FOOTER ================= */}
+      {/* FOOTER */}
       <footer className="bg-white py-12 border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <img src="/logo-light.png" alt="Repero" className="h-8 w-auto object-contain" />
+            <img src="/logo-light.png" alt="Repero" className="h-10 w-auto object-contain" />
             <span className="text-gray-400 text-sm">© 2026 Repero. Un produit OoStudy.</span>
           </div>
           <div className="flex gap-6 text-sm text-gray-500">
