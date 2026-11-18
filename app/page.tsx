@@ -18,6 +18,7 @@ import {
   Users,
 } from 'lucide-react';
 import { WaitlistForm } from '@/components/WaitlistForm';
+import { EarlyAccessButton } from '@/components/site/EarlyAccessButton';
 
 // Contenus de la page d'accueil — centralisés pour faciliter les mises à jour
 const NAV_LINKS = [
@@ -140,13 +141,7 @@ export default function LandingPage() {
             >
               Se connecter
             </Link>
-            <a
-              href="#acces"
-              className="hidden items-center gap-1.5 rounded-full bg-[#0A192F] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#13294b] sm:inline-flex"
-            >
-              Accès anticipé
-              <ArrowRight className="h-4 w-4" />
-            </a>
+            <EarlyAccessButton className="hidden items-center gap-1.5 rounded-full bg-[#0A192F] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#13294b] sm:inline-flex" />
           </div>
         </nav>
       </header>
