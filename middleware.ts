@@ -8,9 +8,12 @@ const PUBLIC_PATHS = [
   '/api/auth/callback',
   '/api/auth/logout',
   '/api/cron',  // ← crons Vercel : pas de session, protégés par header secret
+  '/api/waitlist', // ← inscription liste d'attente depuis la page d'accueil
 ];
 
 function isPublic(pathname: string): boolean {
+  // La page d'accueil (landing) est publique — correspondance exacte uniquement
+  if (pathname === '/') return true;
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
@@ -34,5 +37,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|manifest.json).*)'],
+  // Les fichiers statiques de /public (images, icônes) ne passent pas par l'authentification
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|manifest.json|.*\\.(?:png|jpe?g|svg|webp|gif|ico)$).*)'],
 };
