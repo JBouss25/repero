@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr" className={inter.className}>
+    <html lang="fr" className={`${inter.className} scroll-smooth`}>
       <body className="antialiased">{children}</body>
     </html>
   );
